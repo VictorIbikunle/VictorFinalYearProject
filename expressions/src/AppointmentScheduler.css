@@ -1,0 +1,74 @@
+/* AppointmentScheduler.css */
+
+/* Styles for the scheduler container */
+.scheduler-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for the scheduler content */
+.scheduler-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Styles for the time slots container */
+.time-slots-container {
+  width: 45%;
+}
+
+.time-slots-list {
+  list-style: none;
+  padding: 0;
+}
+
+.time-slots-list li {
+  padding: 10px;
+  margin-bottom: 8px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.time-slots-list li:hover {
+  background-color: #e0e0e0;
+}
+
+/* Styles for the selected time container */
+.selected-time-container {
+  width: 45%;
+  padding: 20px;
+  border: 1px solid #ddd;
+}
+
+.selected-time-container h2 {
+  color: #333;
+}
+
+.selected-time-container p {
+  margin: 0;
+  color: #555;
+}
+
+.selected-time-container button {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.selected-time-container button:hover {
+  background-color: #45a049;
+}
+
+.selected-time-container button:last-child {
+  background-color: #f44336;
+}
+
+.selected-time-container button:last-child:hover {
+  background-color: #d32f2f;
+}
