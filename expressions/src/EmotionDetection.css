@@ -1,0 +1,25 @@
+.EmotionDetection {
+  text-align: center;
+  padding: 20px;
+  background-color: rgb(185, 240, 117);
+}
+
+.video-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+video {
+  max-width: 100%;
+  max-height: 100%;
+  
+}
+button {
+  margin-top: 10px;
+}
+
+.chart-container {
+  margin-top: 20px;
+}

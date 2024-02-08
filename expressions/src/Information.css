@@ -1,0 +1,140 @@
+.information-page {
+  text-align: center;
+  padding: 20px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgb(185, 240, 117);
+}
+
+.slider {
+  position: relative;
+  max-width: 70vw;
+  max-height: 70vw;
+  margin: auto; /* Center the slider horizontally */
+  overflow: hidden;
+  height: 70vh; /* Set the slider height to cover 70% of the screen vertically */
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 100%; /* Make sure the slides fill the entire height of the slider */
+}
+
+.slide {
+  flex: 0 0 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+img {
+  width: 30%;
+  height: auto;
+}
+
+.card-details {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  text-align: left;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.card-details h2 {
+  margin-bottom: 10px;
+}
+
+.card-details p {
+  margin-bottom: 20px;
+}
+
+.card-details button {
+  background-color: #fff;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.card-details button:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.navigation-manual {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+}
+
+.manual-btn {
+  width: 10px;
+  height: 10px;
+  margin: 0 5px;
+  border-radius: 50%;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.manual-btn:hover {
+  background-color: #000;
+}
+
+.manual-btn:checked {
+  background-color: #000;
+}
+
+.paragraph {
+  margin-top: 20px;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.paragraph.active {
+  opacity: 1;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.popup-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.popup-content h2 {
+  margin-bottom: 10px;
+}
+
+.popup-content p {
+  margin-bottom: 20px;
+}
