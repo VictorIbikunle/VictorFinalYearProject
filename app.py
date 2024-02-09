@@ -6,6 +6,8 @@ import numpy as np
 from keras.models import model_from_json
 import threading
 from flask_socketio import SocketIO, emit
+from bson import ObjectId  # Add this import
+from flask import jsonify
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -30,6 +32,39 @@ capture_frames = False
 video_writer = None
 
 called_model_emotions = []
+
+# Define the patient schema
+patient_schema = {
+    "name": str,
+    "dob": str,
+    "phone_number": str,
+    "patient_id": ObjectId  # Reference to the patient
+}
+
+# Create a patient collection
+patient_collection = mongo.db.patients
+
+goal_schema = {
+    "name": str,
+    "description": str,
+    "startDate": str,
+    "endDate": str,
+    "progress": int,
+    "patient_id": ObjectId  # Reference to the patient
+}
+
+goal_collection = mongo.db.goals
+
+
+# Define the emotion graph schema
+emotion_graph_schema = {
+    "emotion": str,
+    "timestamp": str,
+    "patient_id": ObjectId  # Reference to the patient
+}
+
+# Create an emotion graph collection
+emotion_graph_collection = mongo.db.emotion_graph
 
 def emit_frame(frame):
     socketio.emit('frame', {'frame': frame})
@@ -72,9 +107,6 @@ def process_frame(frame):
     log_collection = mongo.db.log
     for emotion in emotions:
         log_collection.insert_one({"emotion": emotion})
-
-    
-        
         called_model_emotions.append(emotion)
 
 @app.route('/video_feed')
@@ -84,15 +116,55 @@ def video_feed():
     response.headers['Content-Type'] = 'image/jpeg'
     return response
 
+# Modify your '/save_data' route to handle patient, goal, and emotion graph data
 @app.route('/save_data', methods=['POST'])
 def save_data():
     try:
         data = request.get_json()
+        patient_data = data.get("patient")
+        goal_data = data.get("goal")
+        emotion_data = data.get("emotion")
+
+        # Save patient data and obtain the patient ID
+        patient_id = patient_collection.insert_one(patient_data).inserted_id
+
+        # Associate patient ID with goal data
+        goal_data["patient_id"] = patient_id
+        goal_collection.insert_one(goal_data)
+
+        # Associate patient ID with emotion data
+        emotion_data["patient_id"] = patient_id
         log_collection = mongo.db.log
-        log_collection.insert_one(data)
-        return jsonify({'message': 'General data added successfully'})
+        log_collection.insert_one(emotion_data)
+
+        message = f"User selected: {patient_data['name']}"  # Create a message with the patient's name
+
+        return jsonify({'message': 'Data added successfully', 'user_message': message})
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+
+    # Define the endpoint to get all patients
+@app.route('/get_all_patients', methods=['GET'])
+def get_all_patients():
+    try:
+        # Access the "patients" collection
+        patients_collection = mongo.db.patients
+
+        # Retrieve all patients from the collection
+        patients = list(patients_collection.find())
+
+        # Exclude the MongoDB ObjectId from the response
+        for patient in patients:
+            patient.pop('_id', None)
+
+        # Return the list of patients as JSON
+        return jsonify({'patients': patients})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+
+
 
 @app.route('/call_model', methods=['GET'])
 def call_model():
@@ -155,7 +227,7 @@ from flask import jsonify
 
 @app.route('/collect_emotions', methods=['GET'])
 def collect_emotions():
-    global called_model_emotions, collecting_mode
+    global collecting_mode
     try:
         print("Collecting emotions from the model call...")
         emotionsList = ["Angry", "Disgusted", "Fearful", "Happy", "Neutral", "Sad", "Surprised"]
@@ -181,13 +253,15 @@ def collect_emotions():
         # Print the emotions with count
         print(emotions_with_count)
 
-        global collecting_mode
         collecting_mode = True
 
-        called_model_emotions = []  # Clear the stored emotions
+        # Emit the emotions directly to the frontend
+        socketio.emit('emotion_data', {'emotionData': emotions_with_count})
         return jsonify({'message': 'Emotions collected successfully', 'emotionData': emotions_with_count})
     except Exception as e:
         return jsonify({'error': str(e)})
+
+
 
 
 
